@@ -13,6 +13,7 @@ db-reset: down up
 	symfony console doctrine:database:drop --force
 	symfony console doctrine:database:create
 	symfony console doctrine:migrations:migrate --no-interaction
+	symfony console app:persist-json-file
 
 db-test:
 	symfony console doctrine:database:create --env=test

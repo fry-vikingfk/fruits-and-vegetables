@@ -51,7 +51,7 @@ class Vegetable
 
     public function setQuantity(int $quantity): static
     {
-        $this->quantity = $quantity;
+        $this->quantity = $this->convertToGrams($quantity, $this->unit);
 
         return $this;
     }
