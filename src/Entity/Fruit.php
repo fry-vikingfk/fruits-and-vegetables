@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\FoodTypeEnum;
 use App\Enum\WeightUnitTypeEnum;
 use App\Repository\FruitRepository;
 use App\Traits\WeightConversionTrait;
@@ -70,5 +71,10 @@ class Fruit
     public function getQuantityInKilograms(): float
     {
         return $this->convertToKilograms($this->quantity, $this->unit);
+    }
+
+    public function getFoodType(): string
+    {
+        return FoodTypeEnum::FRUIT->value;
     }
 }
