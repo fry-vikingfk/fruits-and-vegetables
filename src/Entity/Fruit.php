@@ -4,11 +4,14 @@ namespace App\Entity;
 
 use App\Enum\WeightUnitTypeEnum;
 use App\Repository\FruitRepository;
+use App\Traits\WeightConversionTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FruitRepository::class)]
 class Fruit
 {
+    use WeightConversionTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -47,7 +50,7 @@ class Fruit
 
     public function setQuantity(int $quantity): static
     {
-        $this->quantity = $quantity;
+        $this->quantity = $this->convertToGrams($quantity, $this->unit);
 
         return $this;
     }
@@ -62,5 +65,10 @@ class Fruit
         $this->unit = $unit;
 
         return $this;
+    }
+
+    public function getQuantityInKilograms(): float
+    {
+        return $this->convertToKilograms($this->quantity, $this->unit);
     }
 }
