@@ -7,15 +7,12 @@ up:
 	docker compose up -d
 
 down:
-	symfony server:stop
 	docker compose down
 
-db-reset:
+db-reset: down up
 	symfony console doctrine:database:drop --force
 	symfony console doctrine:database:create
 	symfony console doctrine:migrations:migrate --no-interaction
-	symfony console app:create-admin-user
-	symfony console doctrine:fixtures:load --append
 
 db-test:
 	symfony console doctrine:database:create --env=test
