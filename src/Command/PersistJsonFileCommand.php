@@ -57,7 +57,7 @@ class PersistJsonFileCommand extends Command
     
                 $entity->setName($item['name']);
                 $entity->setUnit(WeightUnitTypeEnum::from($item['unit']));
-                $entity->setQuantity($item['quantity']);
+                $entity->setQuantityInGrams($item['quantity']);
     
                 $this->entityManager->persist($entity);
             }
