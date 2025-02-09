@@ -44,12 +44,12 @@ class Vegetable
         return $this;
     }
 
-    public function getQuantity(): ?int
+    public function getQuantityInGrams(): ?int
     {
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): static
+    public function setQuantityInGrams(int $quantity): static
     {
         $this->quantity = $this->convertToGrams($quantity, $this->unit);
 
