@@ -33,16 +33,10 @@ final class EdibleController extends AbstractController
             );
             
         } catch (\Exception $e) {
-            return $this->json([
-                    'message' => $e->getMessage(),
-               ], $e->getCode()
-            );  
+            return $this->json(['message' => $e->getMessage()], $e->getCode());  
         }
 
-        return $this->json([
-                'edibles' => $edibles,
-            ], JsonResponse::HTTP_OK
-        );
+        return $this->json(['edibles' => $edibles], JsonResponse::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'app_edible_show', methods: ['GET'])]
@@ -52,15 +46,10 @@ final class EdibleController extends AbstractController
             $edible = $this->edibleService->search($id);
             
         } catch (\Exception $e) {
-            return $this->json([
-                    'message' => $e->getMessage(),
-               ], $e->getCode()
-            );  
+            return $this->json(['message' => $e->getMessage()], $e->getCode());  
         }
 
-        return $this->json([
-                'edible' => $edible,
-            ], JsonResponse::HTTP_OK
+        return $this->json(['edible' => $edible], JsonResponse::HTTP_OK
         );
     }
 
@@ -77,15 +66,10 @@ final class EdibleController extends AbstractController
             $this->edibleService->add($edible);
             
         } catch (\Exception $e) {
-            return $this->json([
-                    'message' => $e->getMessage(),
-               ], $e->getCode()
-            );  
+            return $this->json(['message' => $e->getMessage()], $e->getCode());  
         }
 
-        return $this->json([
-                'edible' => $edible,
-            ], JsonResponse::HTTP_CREATED
+        return $this->json(['edible' => $edible], JsonResponse::HTTP_CREATED
         );
     }
 }
