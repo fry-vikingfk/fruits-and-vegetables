@@ -28,7 +28,6 @@ final class FoodService implements FoodServiceInterface
 
     public function search(string $type, int $id): object|null
     {
-        // dd(__METHOD__,$this->serviceFactory($type)->search($id));
         return $this->serviceFactory($type)->search($id);
     }
 
