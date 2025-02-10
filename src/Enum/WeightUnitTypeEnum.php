@@ -14,13 +14,5 @@ enum WeightUnitTypeEnum: string
             self::GRAMS => 1,
         };
     }
-
-    public function toKilograms(): float
-    {
-        return match ($this) {
-            self::KILOGRAMS => 1,
-            self::GRAMS => 0.001,
-        };
-    }
 }
 

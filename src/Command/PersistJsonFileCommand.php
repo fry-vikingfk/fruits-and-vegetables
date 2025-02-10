@@ -2,16 +2,12 @@
 
 namespace App\Command;
 
-use App\Entity\Fruit;
-use App\Entity\Vegetable;
-use App\Enum\FoodTypeEnum;
 use App\Enum\WeightUnitTypeEnum;
+use App\Traits\EdibleTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -22,13 +18,15 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 )]
 class PersistJsonFileCommand extends Command
 {
+    use EdibleTrait;
+
     const FILE_NAME = 'request.json';
 
     private string $projectDir;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly ParameterBagInterface $params
+        private readonly ParameterBagInterface $params,
     )
     {
         $this->projectDir = $params->get('kernel.project_dir');
@@ -50,14 +48,10 @@ class PersistJsonFileCommand extends Command
 
         try {
             foreach ($data as $item) {
-                $entity = match ($item['type']) {
-                    FoodTypeEnum::FRUIT->value => new Fruit(),
-                    FoodTypeEnum::VEGETABLE->value => new Vegetable(),
-                };
-    
+                $entity = $this->createEdibleObject($item['type']);
                 $entity->setName($item['name']);
                 $entity->setUnit(WeightUnitTypeEnum::from($item['unit']));
-                $entity->setQuantityInGrams($item['quantity']);
+                $entity->setQuantity($item['quantity']);
     
                 $this->entityManager->persist($entity);
             }

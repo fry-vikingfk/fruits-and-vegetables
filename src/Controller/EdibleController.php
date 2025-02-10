@@ -3,15 +3,18 @@
 namespace App\Controller;
 
 use App\Service\EdibleService;
-use Serializable;
+use App\Traits\EdibleTrait;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/edible')]
 final class EdibleController extends AbstractController
 {
+    use EdibleTrait;
+
     public function __construct(
         private readonly EdibleService $edibleService,
     )
@@ -19,15 +22,20 @@ final class EdibleController extends AbstractController
     }
 
     #[Route('', name: 'app_edible_list', methods: ['GET'])]
-    public function list(): JsonResponse
+    public function list(Request $request): JsonResponse
     {
         try {
-            $edibles = $this->edibleService->list();
+            $edibles = $this->edibleService->list(
+                type: $request->query->get('type') ?? null,
+                name: ucfirst($request->query->get('name')) ?? null,
+                minWeight: $request->query->get('minWeight') ?? null,
+                maxWeight: $request->query->get('maxWeight') ?? null
+            );
             
         } catch (\Exception $e) {
             return $this->json([
                     'message' => $e->getMessage(),
-               ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+               ], $e->getCode()
             );  
         }
 
@@ -46,13 +54,38 @@ final class EdibleController extends AbstractController
         } catch (\Exception $e) {
             return $this->json([
                     'message' => $e->getMessage(),
-               ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+               ], $e->getCode()
             );  
         }
 
         return $this->json([
                 'edible' => $edible,
             ], JsonResponse::HTTP_OK
+        );
+    }
+
+    #[Route('', name: 'app_edible_add', methods: ['POST'])]
+    public function add(Request $request, SerializerInterface $serializer): JsonResponse
+    {
+        try {
+            $edible = $serializer->deserialize(
+                $request->getContent(),
+                $this->getEdibleClassByType($request->toArray()['type']),
+                'json'
+            );
+
+            $this->edibleService->add($edible);
+            
+        } catch (\Exception $e) {
+            return $this->json([
+                    'message' => $e->getMessage(),
+               ], $e->getCode()
+            );  
+        }
+
+        return $this->json([
+                'edible' => $edible,
+            ], JsonResponse::HTTP_CREATED
         );
     }
 }

@@ -58,15 +58,20 @@ abstract class Edible
         
         return $this;
     }
-    public function getQuantityInGrams(): ?int
+    public function getQuantity(): ?int
     {
-        return $this->quantity;
+        return $this->quantity; 
     }
     
-    public function setQuantityInGrams(int $quantity): static
+    public function setQuantity(int $quantity): static
     {
         $this->quantity = $this->convertToGrams($quantity, $this->unit);
         
         return $this;
-    }   
+    }
+
+    public function getQuantityInKilograms(): float
+    {
+        return $this->convertToKilograms($this->quantity, $this->unit);
+    }
 }
