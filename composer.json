@@ -4,7 +4,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.2.0",
+        "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/dbal": "^3",
@@ -14,7 +14,7 @@
         "symfony/console": "7.2.*",
         "symfony/dotenv": "7.2.0",
         "symfony/flex": "^2",
-        "symfony/framework-bundle": "7.0.*",
+        "symfony/framework-bundle": "7.2.*",
         "symfony/runtime": "7.2.3",
         "symfony/yaml": "7.2.3"
     },
@@ -53,7 +53,8 @@
         "symfony/polyfill-php72": "*",
         "symfony/polyfill-php73": "*",
         "symfony/polyfill-php74": "*",
-        "symfony/polyfill-php80": "*"
+        "symfony/polyfill-php80": "*",
+        "symfony/polyfill-php82": "*"
     },
     "scripts": {
         "auto-scripts": {
@@ -73,7 +74,8 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.0.*"
+            "require": "7.2.*",
+            "docker": true
         }
     }
 }
