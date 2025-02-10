@@ -14,4 +14,9 @@ class Fruit extends Edible
     use WeightConversionTrait;
 
     protected ?FoodTypeEnum $type = FoodTypeEnum::FRUIT;
+
+    public function getType(): ?FoodTypeEnum
+    {
+        return $this->type;
+    }
 }

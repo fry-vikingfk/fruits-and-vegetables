@@ -46,21 +46,8 @@ abstract class Edible
 
         return $this;
     }
-
-    public function geType(): ?FoodTypeEnum
-    {
-        return $this->type;
-    }
-
-    public function setType(FoodTypeEnum $type): static
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
     
-    public function getUnit(): ?string
+    public function getUnit(): ?WeightUnitTypeEnum
     {
         return $this->unit;
     }
