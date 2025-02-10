@@ -16,6 +16,28 @@ class FruitRepository extends ServiceEntityRepository
         parent::__construct($registry, Fruit::class);
     }
 
+    public function findByFilters(?string $name, ?int $minWeight, ?int $maxWeight): array
+    {
+        $qb = $this->createQueryBuilder('f');
+
+        if ($name) {
+            $qb->andWhere('f.name LIKE :name')
+               ->setParameter('name', '%' . $name . '%');
+        }
+
+        if ($minWeight) {
+            $qb->andWhere('f.quantity >= :minWeight')
+               ->setParameter('minWeight', $minWeight);
+        }
+
+        if ($maxWeight) {
+            $qb->andWhere('f.quantity <= :maxWeight')
+               ->setParameter('maxWeight', $maxWeight);
+        }
+        
+        return $qb->getQuery()->getResult();
+    }
+
     //    /**
     //     * @return Fruit[] Returns an array of Fruit objects
     //     */
