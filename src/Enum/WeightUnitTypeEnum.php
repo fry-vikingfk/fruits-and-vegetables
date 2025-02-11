@@ -15,12 +15,9 @@ enum WeightUnitTypeEnum: string
         };
     }
 
-    public function toKilograms(): float
+    public static function toArray(): array
     {
-        return match ($this) {
-            self::KILOGRAMS => 1,
-            self::GRAMS => 0.001,
-        };
+        return array_map(fn($case) => $case->value, self::cases());
     }
 }
 
