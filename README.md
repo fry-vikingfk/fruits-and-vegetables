@@ -1,3 +1,22 @@
+# Stack
+* Symfony 7
+* Doctrine 3.3
+* PHP 8.2
+* Alpine 16 / fpm-alpine3.21
+
+All of them were upgrated from previous versions. You can check the progress here: https://github.com/fry-vikingfk/fruits-and-vegetables/pull/1
+
+# Installation
+After cloning or downloading the repository, run:
+### 📥 Pulling image
+```bash
+make install
+```
+This Makefile command will create the containers, clear cache and run composer install, migrations, a command to populate the db with the provided request.json and all the tests.
+
+You can run `make init` in case you need, or want, reset your local environment. For more deatils, please check the Makefile
+
+
 # 🍎🥕 Fruits and Vegetables
 
 ## 🎯 Goal
@@ -29,31 +48,3 @@ or
 ## When you are finished
 * Please upload your code to a public git repository (i.e. GitHub, Gitlab)
 
-## 🐳 Docker image
-Optional. Just here if you want to run it isolated.
-
-### 📥 Pulling image
-```bash
-docker pull tturkowski/fruits-and-vegetables
-```
-
-### 🧱 Building image
-```bash
-docker build -t tturkowski/fruits-and-vegetables -f docker/Dockerfile .
-```
-
-### 🏃‍♂️ Running container
-```bash
-docker run -it -w/app -v$(pwd):/app tturkowski/fruits-and-vegetables sh 
-```
-
-### 🛂 Running tests
-```bash
-docker run -it -w/app -v$(pwd):/app tturkowski/fruits-and-vegetables bin/phpunit
-```
-
-### ⌨️ Run development server
-```bash
-docker run -it -w/app -v$(pwd):/app -p8080:8080 tturkowski/fruits-and-vegetables php -S 0.0.0.0:8080 -t /app/public
-# Open http://127.0.0.1:8080 in your browser
-```
