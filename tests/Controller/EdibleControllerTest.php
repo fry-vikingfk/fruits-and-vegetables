@@ -37,4 +37,23 @@ final class EdibleControllerTest extends WebTestCase
         $data = json_decode($response->getContent(), true);
         $this->assertCount(5, $data['edibles']);
     }
+
+    public function testSearchAnEdible(): void
+    {
+        $fruit = FruitFactory::createOne([
+            'name' => 'Banana',
+            'unit' => WeightUnitTypeEnum::KILOGRAMS,
+            'quantity' => 2
+        ]);
+
+        $this->client->request('GET', '/edible/' . $fruit->getId());
+
+        $response = $this->client->getResponse();
+        $data = json_decode($response->getContent(), true);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertEquals('Banana', $data['edible']['name']);
+        $this->assertEquals('kg', $data['edible']['unit']);
+        $this->assertEquals(2, $data['edible']['quantity']);
+    }
 }

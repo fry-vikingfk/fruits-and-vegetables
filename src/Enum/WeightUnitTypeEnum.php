@@ -4,8 +4,6 @@ namespace App\Enum;
 
 enum WeightUnitTypeEnum: string
 {
-    public const VALID_CHOICES = ['kg', 'g'];
-    
     case KILOGRAMS = 'kg';
     case GRAMS = 'g';
 
