@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/edible')]
+#[Route('/api/edible')]
 final class EdibleController extends AbstractController
 {
     use EdibleTrait;

@@ -33,7 +33,7 @@ final class EdibleControllerTest extends WebTestCase
         FruitFactory::createMany(3);
         VegetableFactory::createMany(2);
 
-        $this->client->request('GET', '/edible'); 
+        $this->client->request('GET', '/api/edible'); 
 
         $response = $this->client->getResponse();
         $this->assertResponseIsSuccessful();
@@ -53,7 +53,7 @@ final class EdibleControllerTest extends WebTestCase
         $this->entityManager->persist($fruit);
         $this->entityManager->flush();
 
-        $this->client->request('GET', '/edible/' . $fruit->getId());
+        $this->client->request('GET', '/api/edible/' . $fruit->getId());
 
         $response = $this->client->getResponse();
         $data = json_decode($response->getContent(), true);
@@ -75,7 +75,7 @@ final class EdibleControllerTest extends WebTestCase
 
         $this->client->request(
             'POST',
-            '/edible', 
+            '/api/edible', 
             [], 
             [], 
             ['CONTENT_TYPE' => 'application/json'], 
@@ -101,7 +101,7 @@ final class EdibleControllerTest extends WebTestCase
 
         $fruitId = $fruit->getId();
 
-        $this->client->request('DELETE', '/edible/' . $fruitId);
+        $this->client->request('DELETE', '/api/edible/' . $fruitId);
 
         $response = $this->client->getResponse();
         $data = json_decode($response->getContent(), true);
