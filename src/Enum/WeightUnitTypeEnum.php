@@ -14,5 +14,13 @@ enum WeightUnitTypeEnum: string
             self::GRAMS => 1,
         };
     }
+
+    public function toArray()
+    {
+        return [
+            self::KILOGRAMS->value,
+            self::GRAMS->value,
+        ];
+    }
 }
 

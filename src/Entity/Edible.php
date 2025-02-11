@@ -7,6 +7,7 @@ use App\Enum\WeightUnitTypeEnum;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\EdibleRepository;
 use App\Traits\WeightConversionTrait;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EdibleRepository::class)]
 #[ORM\InheritanceType("SINGLE_TABLE")]
@@ -22,13 +23,21 @@ abstract class Edible
     protected ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 255)]
     protected ?string $name = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Positive(message: 'Quantity must be a positive number.')]
     protected ?int $quantity = null;
 
     #[ORM\Column(length: 50, enumType: WeightUnitTypeEnum::class)]
-    protected ?WeightUnitTypeEnum $unit = null;
+    #[Assert\NotBlank]
+    protected ?WeightUnitTypeEnum $unit;
+
+    #[Assert\NotBlank]
+    protected ?FoodTypeEnum $type;
 
     public function getId(): ?int
     {
