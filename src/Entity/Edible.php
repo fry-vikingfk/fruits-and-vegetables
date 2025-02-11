@@ -46,21 +46,8 @@ abstract class Edible
 
         return $this;
     }
-
-    public function geType(): ?FoodTypeEnum
-    {
-        return $this->type;
-    }
-
-    public function setType(FoodTypeEnum $type): static
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
     
-    public function getUnit(): ?string
+    public function getUnit(): ?WeightUnitTypeEnum
     {
         return $this->unit;
     }
@@ -71,15 +58,25 @@ abstract class Edible
         
         return $this;
     }
-    public function getQuantityInGrams(): ?int
+    public function getQuantity(): ?int
     {
-        return $this->quantity;
+        return $this->quantity; 
     }
     
-    public function setQuantityInGrams(int $quantity): static
+    public function setQuantity(int $quantity): static
     {
         $this->quantity = $this->convertToGrams($quantity, $this->unit);
         
         return $this;
-    }   
+    }
+     
+    public function getType(): ?FoodTypeEnum
+    {
+        return $this->type;
+    }
+
+    public function getQuantityInKilograms(): float
+    {
+        return $this->convertToKilograms($this->quantity, $this->unit);
+    }
 }

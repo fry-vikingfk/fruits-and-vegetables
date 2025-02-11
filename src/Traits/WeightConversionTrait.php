@@ -13,6 +13,6 @@ trait WeightConversionTrait
 
     public function convertToKilograms(int $quantity, WeightUnitTypeEnum $unit): float
     {
-        return $quantity * $unit->toKilograms();
+        return $quantity / $unit->toGrams();
     }
 }

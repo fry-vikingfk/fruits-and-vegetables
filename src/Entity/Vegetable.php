@@ -13,4 +13,5 @@ class Vegetable extends Edible
     use WeightConversionTrait;
 
     protected ?FoodTypeEnum $type = FoodTypeEnum::VEGETABLE;
+
 }
