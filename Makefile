@@ -5,6 +5,7 @@ init: down up db-reset db-test
 
 up:
 	docker compose up -d
+	symfony console cache:clear
 
 down:
 	docker compose down
