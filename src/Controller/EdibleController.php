@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Traits\EdibleTrait;
 use App\Service\EdibleService;
+use App\Enum\WeightUnitTypeEnum;
 use App\Traits\RequestValidatorTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,7 +21,8 @@ final class EdibleController extends AbstractController
 
     public function __construct(
         private readonly EdibleService $edibleService,
-        private readonly ValidatorInterface $validator
+        private readonly ValidatorInterface $validator,
+        private readonly SerializerInterface $serializer
     )
     {
     }
@@ -33,18 +35,24 @@ final class EdibleController extends AbstractController
                 type: $request->query->get('type') ?? null,
                 name: ucfirst($request->query->get('name')) ?? null,
                 minWeight: $request->query->get('minWeight') ?? null,
-                maxWeight: $request->query->get('maxWeight') ?? null
+                maxWeight: $request->query->get('maxWeight') ?? null,
             );
-            
+
+            $normalizedEdibles = $this->serializer->serialize($edibles, 'json', [
+                'unit' => $request->query->get('unit'), 
+            ]);
+
+            $response = ['edibles' =>  json_decode($normalizedEdibles, true)];
+
         } catch (\Exception $e) {
             return $this->json(['message' => $e->getMessage()], $e->getCode());  
         }
 
-        return $this->json(['edibles' => $edibles], JsonResponse::HTTP_OK);
+        return $this->json($response, JsonResponse::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'app_edible_show', methods: ['GET'])]
-    public function search(int $id): JsonResponse
+    public function search(int $id, Request $request): JsonResponse
     {
         try {
             $edible = $this->edibleService->search($id);
@@ -55,20 +63,26 @@ final class EdibleController extends AbstractController
                     JsonResponse::HTTP_NOT_FOUND
                 );
             }
+
+            $normalizedEdibles = $this->serializer->serialize($edible, 'json', [
+                'unit' => $request->query->get('unit'), 
+            ]);
+
+            $response = ['edible' =>  json_decode($normalizedEdibles, true)];
             
         } catch (\Exception $e) {
             return $this->json(['message' => $e->getMessage()], $e->getCode());  
         }
 
-        return $this->json(['edible' => $edible], JsonResponse::HTTP_OK
+        return $this->json($response, JsonResponse::HTTP_OK
         );
     }
 
     #[Route('', name: 'app_edible_add', methods: ['POST'])]
-    public function add(Request $request, SerializerInterface $serializer): JsonResponse
+    public function add(Request $request): JsonResponse
     {
         try {
-            $edible = $serializer->deserialize(
+            $edible = $this->serializer->deserialize(
                 $request->getContent(),
                 $this->getEdibleClassByType($request->toArray()['type']),
                 'json'

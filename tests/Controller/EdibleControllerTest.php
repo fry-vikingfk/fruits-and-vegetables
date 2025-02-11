@@ -60,8 +60,30 @@ final class EdibleControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals('Banana', $data['edible']['name']);
-        $this->assertEquals('kg', $data['edible']['unit']);
+        $this->assertEquals('g', $data['edible']['unit']);
         $this->assertEquals(2000, $data['edible']['quantity']);
+    }
+
+    public function testSearchAnEdibleByUnit()
+    {
+        $fruit = new Fruit();
+        $fruit->setName('Banana');
+        $fruit->setUnit(WeightUnitTypeEnum::KILOGRAMS);
+        $fruit->setQuantity(2);
+        $fruit->setQuantityInGrams();
+
+        $this->entityManager->persist($fruit);
+        $this->entityManager->flush();
+
+        $this->client->request('GET', '/api/edible/' . $fruit->getId() . '?unit=' . $fruit->getUnit()->value);
+
+        $response = $this->client->getResponse();
+        $data = json_decode($response->getContent(), true);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertEquals('Banana', $data['edible']['name']);
+        $this->assertEquals('kg', $data['edible']['unit']);
+        $this->assertEquals(2, $data['edible']['quantity']);
     }
 
     public function testAddEdible(): void
@@ -87,7 +109,7 @@ final class EdibleControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals('Banana', $data['edible']['name']);
-        $this->assertEquals('kg', $data['edible']['unit']);
+        $this->assertEquals('g', $data['edible']['unit']);
         $this->assertEquals(2000, $data['edible']['quantity']);
     }
 

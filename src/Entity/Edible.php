@@ -7,7 +7,9 @@ use App\Enum\WeightUnitTypeEnum;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\EdibleRepository;
 use App\Traits\WeightConversionTrait;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: EdibleRepository::class)]
 #[ORM\InheritanceType("SINGLE_TABLE")]
@@ -60,6 +62,7 @@ abstract class Edible
 
         return $this;
     }
+
     
     public function getUnit(): ?WeightUnitTypeEnum
     {
@@ -72,9 +75,16 @@ abstract class Edible
         
         return $this;
     }
-    public function getQuantity(): ?int
+
+    public function getQuantity(string $unit = WeightUnitTypeEnum::GRAMS->value): int|float
     {
-        return $this->quantity; 
+        return match ($unit) {
+            WeightUnitTypeEnum::GRAMS->value => $this->quantity,
+            WeightUnitTypeEnum::KILOGRAMS->value => $this->convertToKilograms(
+                $this->quantity,
+                WeightUnitTypeEnum::from($unit)
+            ),
+        };
     }
     
     public function setQuantity(int $quantity): static
@@ -89,6 +99,7 @@ abstract class Edible
         return $this->type;
     }
 
+    
     public function getQuantityInKilograms(): float
     {
         return $this->convertToKilograms($this->quantity, $this->unit);
