@@ -69,6 +69,11 @@ abstract class Edible
         
         return $this;
     }
+     
+    public function getType(): ?FoodTypeEnum
+    {
+        return $this->type;
+    }
 
     public function getQuantityInKilograms(): float
     {

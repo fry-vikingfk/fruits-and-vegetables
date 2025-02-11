@@ -14,8 +14,4 @@ class Vegetable extends Edible
 
     protected ?FoodTypeEnum $type = FoodTypeEnum::VEGETABLE;
 
-    public function getType(): ?FoodTypeEnum
-    {
-        return $this->type;
-    }
 }
