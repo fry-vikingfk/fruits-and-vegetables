@@ -16,6 +16,7 @@ db-reset: up
 	symfony console app:persist-json-file
 
 db-test:
+	symfony console doctrine:database:drop --force --env=test
 	symfony console doctrine:database:create --env=test
 	symfony console doctrine:schema:create --env=test
 

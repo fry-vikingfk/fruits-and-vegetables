@@ -18,8 +18,9 @@ abstract class Edible
     use WeightConversionTrait;
     
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
+    #[ORM\SequenceGenerator(sequenceName: "edible_id_seq", allocationSize: 1)]
+    #[ORM\Column(type: "integer")]
     protected ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -34,10 +35,10 @@ abstract class Edible
 
     #[ORM\Column(length: 50, enumType: WeightUnitTypeEnum::class)]
     #[Assert\NotBlank]
-    protected ?WeightUnitTypeEnum $unit;
+    protected ?WeightUnitTypeEnum $unit = null;
 
     #[Assert\NotBlank]
-    protected ?FoodTypeEnum $type;
+    protected ?FoodTypeEnum $type = null;
 
     public function getId(): ?int
     {
