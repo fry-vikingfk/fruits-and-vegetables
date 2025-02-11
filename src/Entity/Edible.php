@@ -35,6 +35,10 @@ abstract class Edible
 
     #[ORM\Column(length: 50, enumType: WeightUnitTypeEnum::class)]
     #[Assert\NotBlank(message: 'Unit must be specified.')]
+    #[Assert\Choice(
+        choices:[WeightUnitTypeEnum::GRAMS, WeightUnitTypeEnum::KILOGRAMS], 
+        message: 'Invalid unit.'
+    )]
     protected ?WeightUnitTypeEnum $unit = null;
 
     #[Assert\NotBlank]
