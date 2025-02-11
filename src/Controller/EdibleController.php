@@ -2,21 +2,25 @@
 
 namespace App\Controller;
 
-use App\Service\EdibleService;
 use App\Traits\EdibleTrait;
+use App\Service\EdibleService;
+use App\Traits\RequestValidatorTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/edible')]
 final class EdibleController extends AbstractController
 {
     use EdibleTrait;
+    use RequestValidatorTrait;
 
     public function __construct(
         private readonly EdibleService $edibleService,
+        private readonly ValidatorInterface $validator
     )
     {
     }
@@ -62,6 +66,14 @@ final class EdibleController extends AbstractController
                 $this->getEdibleClassByType($request->toArray()['type']),
                 'json'
             );
+
+            if($errorMessage = $this->validate($edible))
+            {
+                return $this->json([
+                    'message' => 'Validation error',
+                    'errors' => $errorMessage
+                ], JsonResponse::HTTP_BAD_REQUEST);
+            }
 
             $this->edibleService->add($edible);
             
