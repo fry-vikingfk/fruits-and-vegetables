@@ -18,8 +18,9 @@ abstract class Edible
     use WeightConversionTrait;
     
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
+    #[ORM\SequenceGenerator(sequenceName: "edible_id_seq", allocationSize: 1)]
+    #[ORM\Column(type: "integer")]
     protected ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -33,11 +34,15 @@ abstract class Edible
     protected ?int $quantity = null;
 
     #[ORM\Column(length: 50, enumType: WeightUnitTypeEnum::class)]
-    #[Assert\NotBlank]
-    protected ?WeightUnitTypeEnum $unit;
+    #[Assert\NotBlank(message: 'Unit must be specified.')]
+    #[Assert\Choice(
+        choices:[WeightUnitTypeEnum::GRAMS, WeightUnitTypeEnum::KILOGRAMS], 
+        message: 'Invalid unit.'
+    )]
+    protected ?WeightUnitTypeEnum $unit = null;
 
     #[Assert\NotBlank]
-    protected ?FoodTypeEnum $type;
+    protected ?FoodTypeEnum $type = null;
 
     public function getId(): ?int
     {
@@ -74,7 +79,7 @@ abstract class Edible
     
     public function setQuantity(int $quantity): static
     {
-        $this->quantity = $this->convertToGrams($quantity, $this->unit);
+        $this->quantity = $quantity;
         
         return $this;
     }
@@ -87,5 +92,10 @@ abstract class Edible
     public function getQuantityInKilograms(): float
     {
         return $this->convertToKilograms($this->quantity, $this->unit);
+    }
+
+    public function setQuantityInGrams()
+    {
+        $this->quantity = $this->convertToGrams($this->quantity, $this->unit);
     }
 }

@@ -48,6 +48,13 @@ final class EdibleController extends AbstractController
     {
         try {
             $edible = $this->edibleService->search($id);
+
+            if (!$edible) {
+                return $this->json([
+                    'message' => "Edible with id $id not found"], 
+                    JsonResponse::HTTP_NOT_FOUND
+                );
+            }
             
         } catch (\Exception $e) {
             return $this->json(['message' => $e->getMessage()], $e->getCode());  
@@ -101,6 +108,6 @@ final class EdibleController extends AbstractController
             return $this->json(['message' => $e->getMessage()], $e->getCode());  
         }
 
-        return $this->json(['message' => "dible with id $id deleted"], JsonResponse::HTTP_OK);
+        return $this->json(['message' => "edible with id $id deleted"], JsonResponse::HTTP_OK);
     }
 }
