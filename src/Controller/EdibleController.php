@@ -108,6 +108,6 @@ final class EdibleController extends AbstractController
             return $this->json(['message' => $e->getMessage()], $e->getCode());  
         }
 
-        return $this->json(['message' => "dible with id $id deleted"], JsonResponse::HTTP_OK);
+        return $this->json(['message' => "edible with id $id deleted"], JsonResponse::HTTP_OK);
     }
 }
