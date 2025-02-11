@@ -40,6 +40,8 @@ class EdibleService
 
     public function add(Edible $edible): void
     {
+        $edible->setQuantityInGrams();
+        
         $this->entityManager->persist($edible);
         $this->entityManager->flush();
     }

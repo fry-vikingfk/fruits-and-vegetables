@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 #[AsCommand(
     name: 'app:persist-json-file',
-    description: 'perists a response.json file to the database',
+    description: 'perists the response.json file into the database',
 )]
 class PersistJsonFileCommand extends Command
 {
@@ -48,12 +48,13 @@ class PersistJsonFileCommand extends Command
 
         try {
             foreach ($data as $item) {
-                $entity = $this->createEdibleObject($item['type']);
-                $entity->setName($item['name']);
-                $entity->setUnit(WeightUnitTypeEnum::from($item['unit']));
-                $entity->setQuantity($item['quantity']);
+                $edible = $this->createEdibleObject($item['type']);
+                $edible->setName($item['name']);
+                $edible->setUnit(WeightUnitTypeEnum::from($item['unit']));
+                $edible->setQuantity($item['quantity']);
+                $edible->setQuantityInGrams();
     
-                $this->entityManager->persist($entity);
+                $this->entityManager->persist($edible);
             }
 
             $this->entityManager->flush();

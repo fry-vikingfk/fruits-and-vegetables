@@ -34,7 +34,7 @@ abstract class Edible
     protected ?int $quantity = null;
 
     #[ORM\Column(length: 50, enumType: WeightUnitTypeEnum::class)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'Unit must be specified.')]
     protected ?WeightUnitTypeEnum $unit = null;
 
     #[Assert\NotBlank]
@@ -75,7 +75,7 @@ abstract class Edible
     
     public function setQuantity(int $quantity): static
     {
-        $this->quantity = $this->convertToGrams($quantity, $this->unit);
+        $this->quantity = $quantity;
         
         return $this;
     }
@@ -88,5 +88,10 @@ abstract class Edible
     public function getQuantityInKilograms(): float
     {
         return $this->convertToKilograms($this->quantity, $this->unit);
+    }
+
+    public function setQuantityInGrams()
+    {
+        $this->quantity = $this->convertToGrams($this->quantity, $this->unit);
     }
 }
