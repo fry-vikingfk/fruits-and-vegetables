@@ -72,4 +72,23 @@ final class EdibleController extends AbstractController
         return $this->json(['edible' => $edible], JsonResponse::HTTP_CREATED
         );
     }
+
+    #[Route('/{id}', name: 'app_edible_delete', methods: ['DELETE'])]
+    public function delete(int $id): JsonResponse
+    {
+        try {
+            $edible = $this->edibleService->search($id);
+            
+            if (!$edible) {
+                return $this->json(['message' => "Edible with id $id not found"], JsonResponse::HTTP_NOT_FOUND);
+            }
+
+            $this->edibleService->remove($edible);
+            
+        } catch (\Exception $e) {
+            return $this->json(['message' => $e->getMessage()], $e->getCode());  
+        }
+
+        return $this->json(['message' => "dible with id $id deleted"], JsonResponse::HTTP_OK);
+    }
 }

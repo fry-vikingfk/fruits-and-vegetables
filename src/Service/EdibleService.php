@@ -43,4 +43,10 @@ class EdibleService
         $this->entityManager->persist($edible);
         $this->entityManager->flush();
     }
+
+    public function remove(Edible $edible): void
+    {
+        $this->entityManager->remove($edible);
+        $this->entityManager->flush();
+    }
 }
