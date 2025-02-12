@@ -60,6 +60,7 @@ abstract class Edible
 
         return $this;
     }
+
     
     public function getUnit(): ?WeightUnitTypeEnum
     {
@@ -72,9 +73,16 @@ abstract class Edible
         
         return $this;
     }
-    public function getQuantity(): ?int
+
+    public function getQuantity(string $unit = WeightUnitTypeEnum::GRAMS->value): int|float
     {
-        return $this->quantity; 
+        return match ($unit) {
+            WeightUnitTypeEnum::GRAMS->value => $this->quantity,
+            WeightUnitTypeEnum::KILOGRAMS->value => $this->convertToKilograms(
+                $this->quantity,
+                WeightUnitTypeEnum::from($unit)
+            ),
+        };
     }
     
     public function setQuantity(int $quantity): static
@@ -89,6 +97,7 @@ abstract class Edible
         return $this->type;
     }
 
+    
     public function getQuantityInKilograms(): float
     {
         return $this->convertToKilograms($this->quantity, $this->unit);

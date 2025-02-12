@@ -42,7 +42,10 @@ final class EdibleControllerTest extends WebTestCase
         $this->assertCount(5, $data['edibles']);
     }
 
-    public function testSearchAnEdible(): void
+    /**
+     * @dataProvider edibleSearchProvider
+     */
+    public function testSearchAnEdible(string $unitQuery, string $expectedUnit, int $expectedQuantity): void
     {
         $fruit = new Fruit();
         $fruit->setName('Banana');
@@ -53,15 +56,16 @@ final class EdibleControllerTest extends WebTestCase
         $this->entityManager->persist($fruit);
         $this->entityManager->flush();
 
-        $this->client->request('GET', '/api/edible/' . $fruit->getId());
+        $url = '/api/edible/' . $fruit->getId() . $unitQuery;
+        $this->client->request('GET', $url);
 
         $response = $this->client->getResponse();
         $data = json_decode($response->getContent(), true);
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals('Banana', $data['edible']['name']);
-        $this->assertEquals('kg', $data['edible']['unit']);
-        $this->assertEquals(2000, $data['edible']['quantity']);
+        $this->assertEquals($expectedUnit, $data['edible']['unit']);
+        $this->assertEquals($expectedQuantity, $data['edible']['quantity']);
     }
 
     public function testAddEdible(): void
@@ -87,7 +91,7 @@ final class EdibleControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals('Banana', $data['edible']['name']);
-        $this->assertEquals('kg', $data['edible']['unit']);
+        $this->assertEquals('g', $data['edible']['unit']);
         $this->assertEquals(2000, $data['edible']['quantity']);
     }
 
@@ -108,5 +112,21 @@ final class EdibleControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals("edible with id $fruitId deleted", $data['message']);
+    }
+
+    public function edibleSearchProvider(): array
+    {
+        return [
+            'Default unit (grams)' => [
+                'unitQuery' => '',
+                'expectedUnit' => 'g',
+                'expectedQuantity' => 2000,
+            ],
+            'Explicit unit (kilograms)' => [
+                'unitQuery' => '?unit=kg',
+                'expectedUnit' => 'kg',
+                'expectedQuantity' => 2,
+            ],
+        ];
     }
 }
