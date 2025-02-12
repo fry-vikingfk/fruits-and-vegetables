@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Edible;
 use App\Traits\EdibleTrait;
 use App\Service\EdibleService;
-use App\Enum\WeightUnitTypeEnum;
 use App\Traits\RequestValidatorTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -52,17 +52,16 @@ final class EdibleController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_edible_show', methods: ['GET'])]
-    public function search(int $id, Request $request): JsonResponse
+    public function search(Edible $edible, Request $request): JsonResponse
     {
-        try {
-            $edible = $this->edibleService->search($id);
+        if (!$edible) {
+            return $this->json([
+                'message' => "Edible not found"], 
+                JsonResponse::HTTP_NOT_FOUND
+            );
+        }
 
-            if (!$edible) {
-                return $this->json([
-                    'message' => "Edible with id $id not found"], 
-                    JsonResponse::HTTP_NOT_FOUND
-                );
-            }
+        try {
 
             $normalizedEdibles = $this->serializer->serialize($edible, 'json', [
                 'unit' => $request->query->get('unit'), 
@@ -74,8 +73,7 @@ final class EdibleController extends AbstractController
             return $this->json(['message' => $e->getMessage()], $e->getCode());  
         }
 
-        return $this->json($response, JsonResponse::HTTP_OK
-        );
+        return $this->json($response, JsonResponse::HTTP_OK);
     }
 
     #[Route('', name: 'app_edible_add', methods: ['POST'])]
@@ -107,15 +105,15 @@ final class EdibleController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_edible_delete', methods: ['DELETE'])]
-    public function delete(int $id): JsonResponse
+    public function delete(Edible $edible): JsonResponse
     {
-        try {
-            $edible = $this->edibleService->search($id);
-            
-            if (!$edible) {
-                return $this->json(['message' => "Edible with id $id not found"], JsonResponse::HTTP_NOT_FOUND);
-            }
+        if (!$edible) {
+            return $this->json(['message' => "Edible not found"], JsonResponse::HTTP_NOT_FOUND);
+        }
 
+        $id = $edible->getId();
+
+        try {
             $this->edibleService->remove($edible);
             
         } catch (\Exception $e) {
