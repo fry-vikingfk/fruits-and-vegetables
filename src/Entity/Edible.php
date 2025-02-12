@@ -7,9 +7,7 @@ use App\Enum\WeightUnitTypeEnum;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\EdibleRepository;
 use App\Traits\WeightConversionTrait;
-use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: EdibleRepository::class)]
 #[ORM\InheritanceType("SINGLE_TABLE")]

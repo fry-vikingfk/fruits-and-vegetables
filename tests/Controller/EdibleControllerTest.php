@@ -91,7 +91,7 @@ final class EdibleControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals('Banana', $data['edible']['name']);
-        // $this->assertEquals('g', $data['edible']['unit']);
+        $this->assertEquals('g', $data['edible']['unit']);
         $this->assertEquals(2000, $data['edible']['quantity']);
     }
 
