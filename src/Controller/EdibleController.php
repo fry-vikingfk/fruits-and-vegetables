@@ -100,8 +100,7 @@ final class EdibleController extends AbstractController
             return $this->json(['message' => $e->getMessage()], $e->getCode());  
         }
 
-        return $this->json(['edible' => $edible], JsonResponse::HTTP_CREATED
-        );
+        return $this->json(['edible' => $edible], JsonResponse::HTTP_CREATED);
     }
 
     #[Route('/{id}', name: 'app_edible_delete', methods: ['DELETE'])]
